@@ -305,7 +305,7 @@
     display: none;
   }
   .uploader-file[status="error"] .uploader-file-progress {
-    background: #ffe0e0;
+    background: #ffe0e070;
   }
   .uploader-file-progress {
     position: absolute;
