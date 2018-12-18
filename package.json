@@ -1,13 +1,15 @@
 {
-  "name": "vue-simple-uploader",
-  "version": "0.5.6",
+  "name": "cr-vue-simple-uploader",
+  "version": "0.5.9",
   "description": "A Vue.js upload component powered by simple-uploader.js",
   "main": "dist/vue-uploader.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/simple-uploader/vue-uploader.git"
+    "url": "git+https://github.com/simple-uploader/vue-uploader.git"
   },
-  "bugs": "https://github.com/simple-uploader/vue-uploader/issues",
+  "bugs": {
+    "url": "https://github.com/simple-uploader/vue-uploader/issues"
+  },
   "homepage": "https://github.com/simple-uploader/vue-uploader",
   "author": "dolymood@gmail.com",
   "license": "MIT",
@@ -78,5 +80,8 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "directories": {
+    "example": "example"
+  }
 }

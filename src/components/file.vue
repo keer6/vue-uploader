@@ -25,7 +25,13 @@
       >
       <div class="uploader-file-progress" :class="progressingClass" :style="progressStyle"></div>
       <div class="uploader-file-info">
-        <div class="uploader-file-name"><i class="uploader-file-icon" :icon="fileCategory"></i>{{file.name}}</div>
+        <div class="uploader-file-name">
+          <!-- <i class="uploader-file-icon" :icon="fileCategory"></i> -->
+            <svg class="icon" aria-hidden="true">
+              <use :xlink:href="fileCategory"></use>
+            </svg>
+            {{file.name}}
+          </div>
         <div class="uploader-file-size">{{formatedSize}}</div>
         <div class="uploader-file-meta"></div>
         <div class="uploader-file-status">
@@ -93,10 +99,16 @@
         let type = isFolder ? 'folder' : 'unknown'
         const categoryMap = this.file.uploader.opts.categoryMap
         const typeMap = categoryMap || {
-          image: ['gif', 'jpg', 'jpeg', 'png', 'bmp', 'webp'],
+          jpg: ['gif', 'jpg', 'jpeg', 'png', 'bmp', 'webp'],
           video: ['mp4', 'm3u8', 'rmvb', 'avi', 'swf', '3gp', 'mkv', 'flv'],
           audio: ['mp3', 'wav', 'wma', 'ogg', 'aac', 'flac'],
-          document: ['doc', 'txt', 'docx', 'pages', 'epub', 'pdf', 'numbers', 'csv', 'xls', 'xlsx', 'keynote', 'ppt', 'pptx']
+          document: ['pages', 'epub', 'numbers', 'keynote'],
+          pdf: ['pdf'],
+          ppt: ['ppt', 'pptx'],
+          doc: ['doc', 'txt', 'docx', 'wps'],
+          xls: ['xls', 'xlsx', 'csv'],
+          txt: ['txt'],
+          mark: ['md']
         }
         Object.keys(typeMap).forEach((_type) => {
           const extensions = typeMap[_type]
@@ -104,7 +116,7 @@
             type = _type
           }
         })
-        return type
+        return '#el-icon-edu-' + type
       },
       progressStyle () {
         const progress = Math.floor(this.progress * 100)
