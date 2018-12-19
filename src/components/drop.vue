@@ -54,8 +54,6 @@
     position: relative;
     padding: 10px;
     overflow: hidden;
-    border: 1px dashed #ccc;
-    background-color: #f5f5f5;
   }
   .uploader-dragover {
     border-color: #999;

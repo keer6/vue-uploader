@@ -43,14 +43,16 @@
     padding: 4px 8px;
     font-size: 100%;
     line-height: 1.4;
-    color: #666;
-    border: 1px solid #666;
+    color: #00a97a;
+    border: 1px solid #00a97a;
     cursor: pointer;
     border-radius: 2px;
     background: none;
     outline: none;
+    border-radius: 4px;
   }
   .uploader-btn:hover {
-    background-color: rgba(0, 0, 0, .08);
+    background-color: #00a97a;
+    color: #fff;
   }
 </style>
