@@ -6,6 +6,7 @@
       :status="status"
       :paused="paused"
       :error="error"
+      :response="response"
       :average-speed="averageSpeed"
       :formated-average-speed="formatedAverageSpeed"
       :current-speed="currentSpeed"
@@ -26,12 +27,11 @@
       <div class="uploader-file-progress" :class="progressingClass" :style="progressStyle"></div>
       <div class="uploader-file-info">
         <div class="uploader-file-name">
-          <!-- <i class="uploader-file-icon" :icon="fileCategory"></i> -->
-            <svg class="icon" aria-hidden="true">
-              <use :xlink:href="fileCategory"></use>
-            </svg>
-            {{file.name}}
-          </div>
+          <svg class="icon" aria-hidden="true">
+            <use :xlink:href="fileCategory"></use>
+          </svg>
+          {{file.name}}
+        </div>
         <div class="uploader-file-size">{{formatedSize}}</div>
         <div class="uploader-file-meta"></div>
         <div class="uploader-file-status">
@@ -76,6 +76,7 @@
     },
     data () {
       return {
+        response: null,
         paused: false,
         error: false,
         averageSpeed: 0,
@@ -116,7 +117,7 @@
             type = _type
           }
         })
-        return '#el-icon-edu-' + type
+        return type
       },
       progressStyle () {
         const progress = Math.floor(this.progress * 100)
@@ -151,7 +152,14 @@
       },
       statusText () {
         const status = this.status
-        return this.file.uploader.fileStatusText[status] || status
+        const fileStatusText = this.file.uploader.fileStatusText
+        let txt = status
+        if (typeof fileStatusText === 'function') {
+          txt = fileStatusText(status, this.response)
+        } else {
+          txt = fileStatusText[status]
+        }
+        return txt || status
       },
       formatedTimeRemaining () {
         const timeRemaining = this.timeRemaining
@@ -201,12 +209,20 @@
         this.file.retry()
         this._actionCheck()
       },
+      processResponse (message) {
+        let res = message
+        try {
+          res = JSON.parse(message)
+        } catch (e) {}
+        this.response = res
+      },
       fileEventsHandler (event, args) {
         const rootFile = args[0]
         const file = args[1]
         const target = this.list ? rootFile : file
         if (this.file === target) {
           if (this.list && event === 'fileSuccess') {
+            this.processResponse(args[2])
             return
           }
           this[`_${event}`].apply(this, args)
@@ -220,7 +236,10 @@
         this.uploadedSize = this.file.sizeUploaded()
         this._actionCheck()
       },
-      _fileSuccess () {
+      _fileSuccess (rootFile, file, message) {
+        if (rootFile) {
+          this.processResponse(message)
+        }
         this._fileProgress()
         this.error = false
         this.isComplete = true
@@ -229,8 +248,9 @@
       _fileComplete () {
         this._fileSuccess()
       },
-      _fileError () {
+      _fileError (rootFile, file, message) {
         this._fileProgress()
+        this.processResponse(message)
         this.error = true
         this.isComplete = false
         this.isUploading = false
@@ -317,7 +337,7 @@
     display: none;
   }
   .uploader-file[status="error"] .uploader-file-progress {
-    background: #ffe0e070;
+    background: #ffe0e0;
   }
   .uploader-file-progress {
     position: absolute;
